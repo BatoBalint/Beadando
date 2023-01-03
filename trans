@@ -1,0 +1,3 @@
+#/bin/bash
+
+gcc reverse.c -o myrev -W -Wall -Wextra -pedantic
