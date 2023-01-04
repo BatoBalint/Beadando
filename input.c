@@ -46,7 +46,7 @@ int myRead(char ***lines, FILE *reader, conf config, int readPtr, int mallocSize
             lines[0] = realloc(lines[0], mallocSize * 2 * sizeof(char*));
             if (lines == NULL) return mallocError();
 
-            for (int i = mallocSize - 1; i < mallocSize * 2; i++) {
+            for (int i = mallocSize; i < mallocSize * 2; i++) {
                 lines[0][i] = malloc(config.maxCharCount);
                 if (lines[0][i] == NULL) return mallocError();
             }
