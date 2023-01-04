@@ -6,6 +6,7 @@
 
 int myRead(char ***lines, FILE *reader, conf config, int readPtr, int mallocSize);
 
+// easier to write error with this
 int mallocError() {
     fprintf(stderr, "Malloc error.");
     return -1;
@@ -13,19 +14,19 @@ int mallocError() {
 
 int getInput(char ***lines, int argc, char *argv[], conf config, int mallocSize) {
     FILE *reader;
-    int readPtr = 0;
+    int readPtr = 0;        // memory writing index
 
     for (int i = 0; i < mallocSize; i++) {
         lines[0][i] = malloc(config.maxCharCount);
         if (lines[0][i] == NULL) return mallocError();
     } 
 
-    if (argc == 3) {
+    if (argc == 3) {                    // read from console then exit with allocated memory size
         reader = stdin;
         return myRead(lines, reader, config, readPtr, mallocSize);
     }
 
-    for (int i = 3; i < argc; i++)
+    for (int i = 3; i < argc; i++)      // read from files then exit with allocated memory size
     {
         reader = fopen(argv[i], "r");
         if (reader == NULL) fprintf(stderr, "Could not open the file: %s", argv[i]);
@@ -41,6 +42,7 @@ int myRead(char ***lines, FILE *reader, conf config, int readPtr, int mallocSize
 
     fgets(buffer, config.maxCharCount, reader);
     buffer[strlen(buffer) - 1] = '\0';
+
     while (!feof(reader)) {
         if (readPtr == mallocSize - 1) {
             lines[0] = realloc(lines[0], mallocSize * 2 * sizeof(char*));
@@ -53,15 +55,17 @@ int myRead(char ***lines, FILE *reader, conf config, int readPtr, int mallocSize
 
             mallocSize *= 2;
         }
-        strcpy(lines[0][readPtr], buffer);
 
+        strcpy(lines[0][readPtr], buffer);          // in this order last line not duplicated
         fgets(buffer, config.maxCharCount, reader);
-        buffer[strlen(buffer) - 1] = '\0';
-
+        buffer[strlen(buffer) - 1] = '\0';          // remove line break from fgets' result
         readPtr++;
     }
-    char end[1] = { (char) -1 };
+
+    char end[1] = { (char) -1 };        // lazy way to tell the end of the array anywhere
     strcpy(lines[0][readPtr], end);
+
     free(buffer);
+
     return mallocSize;
 }
