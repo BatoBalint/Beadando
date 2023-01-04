@@ -43,8 +43,6 @@ int myRead(char ***lines, FILE *reader, conf config, int readPtr, int mallocSize
     buffer[strlen(buffer) - 1] = '\0';
     while (!feof(reader)) {
         if (readPtr == mallocSize - 1) {
-            printf("realloc start\n");
-            printf("%d\n", mallocSize);
             lines[0] = realloc(lines[0], mallocSize * 2 * sizeof(char*));
             if (lines == NULL) return mallocError();
 
@@ -54,7 +52,6 @@ int myRead(char ***lines, FILE *reader, conf config, int readPtr, int mallocSize
             }
 
             mallocSize *= 2;
-            printf("realloc end\n");
         }
         strcpy(lines[0][readPtr], buffer);
 
