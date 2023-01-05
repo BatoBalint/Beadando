@@ -18,14 +18,14 @@ int main(int argc, char *argv[]) {
 
     char ***lines = malloc(sizeof(char**));     // 3 levels because it wouldn't let me free otherwise
     if (lines == NULL) {
-        fprintf(stderr, "Malloc error.");
+        fprintf(stderr, "Memory allocation failed!");
         return 1;
     }
     lines[0] = malloc(8 * sizeof(char*));
     for (int i = 0; i < 8; i++)
     {
         if (lines == NULL) {
-            fprintf(stderr, "Malloc error.");
+            fprintf(stderr, "Memory allocation failed!");
             return 1;
         }
     }
@@ -43,6 +43,7 @@ int main(int argc, char *argv[]) {
     for (int i = dataCount - 1; i >= 0; i--)                             // write to console
     {
         if (config.linenums) printf("%d ", i + 1);
+        myReverse(lines[0][i]);
         printf("%s\n", lines[0][i]);
     }
 

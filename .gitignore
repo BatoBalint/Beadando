@@ -3,3 +3,4 @@ trans
 .vscode/settings.json
 input*
 *.zip
+zipit.ps1
