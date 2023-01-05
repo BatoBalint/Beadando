@@ -45,10 +45,9 @@ int myRead(char ***lines, FILE *reader, conf config, int mallocSize) {
     char *buffer = malloc(config.maxCharCount);
 
     fgets(buffer, config.maxCharCount, reader);
-    buffer[strlen(buffer) - 1] = '\0';
     if (!strrchr(buffer, '\n')) {                       // clear input buffer if given more charachters than the maxCharCount
         while ((ch = getchar()) != '\n' && ch != EOF);
-    }
+    } else buffer[strlen(buffer) - 1] = '\0';
 
     while (!feof(reader)) {
         if (readPtr == mallocSize - 1) {
@@ -66,10 +65,9 @@ int myRead(char ***lines, FILE *reader, conf config, int mallocSize) {
         strcpy(lines[0][readPtr], buffer);          // in this read order, last line ins't duplicated
         fgets(buffer, config.maxCharCount, reader);
         if (!strrchr(buffer, '\n')) {                       // same input buffer clearing
-            while ((ch = getchar()) != '\n' && ch != EOF);
+            while ((ch = fgetc(reader)) != '\n' && ch != EOF);
         }
-
-        buffer[strlen(buffer) - 1] = '\0';          // remove line break from fgets result
+        else buffer[strlen(buffer) - 1] = '\0';          // remove line break from fgets result
         readPtr++;
     }
 
