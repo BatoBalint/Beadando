@@ -32,6 +32,7 @@ int getInput(char ***lines, int argc, char *argv[], conf config, int mallocSize)
         else {
             mallocSize = myRead(lines, reader, config, mallocSize);
         }
+        fclose(reader);
     }
     return mallocSize;
 }
