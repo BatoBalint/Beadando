@@ -38,6 +38,7 @@ int getInput(char ***lines, int argc, char *argv[], conf config, int mallocSize)
 }
 
 int myRead(char ***lines, FILE *reader, conf config, int mallocSize) {
+    char ch;                // does nothing
     int readPtr = 0;        // current memory index
     if (mallocSize != 8) while (lines[0][readPtr][0] != -1) readPtr++;  // when reading from file finds the real end of the array
 
@@ -45,6 +46,9 @@ int myRead(char ***lines, FILE *reader, conf config, int mallocSize) {
 
     fgets(buffer, config.maxCharCount, reader);
     buffer[strlen(buffer) - 1] = '\0';
+    if (!strrchr(buffer, '\n')) {                       // clear input buffer if given more charachters than the maxCharCount
+        while ((ch = getchar()) != '\n' && ch != EOF);
+    }
 
     while (!feof(reader)) {
         if (readPtr == mallocSize - 1) {
@@ -61,6 +65,10 @@ int myRead(char ***lines, FILE *reader, conf config, int mallocSize) {
 
         strcpy(lines[0][readPtr], buffer);          // in this read order, last line ins't duplicated
         fgets(buffer, config.maxCharCount, reader);
+        if (!strrchr(buffer, '\n')) {                       // same input buffer clearing
+            while ((ch = getchar()) != '\n' && ch != EOF);
+        }
+
         buffer[strlen(buffer) - 1] = '\0';          // remove line break from fgets result
         readPtr++;
     }

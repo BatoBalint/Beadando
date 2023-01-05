@@ -4,3 +4,5 @@ trans
 input*
 *.zip
 zipit.ps1
+test.c
+test
