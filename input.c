@@ -8,7 +8,7 @@ int myRead(char ***lines, FILE *reader, conf config, int mallocSize);
 
 // easier to write error with this
 int mallocError() {
-    fprintf(stderr, "Malloc error.");
+    fprintf(stderr, "Memory allocation failed!");
     return -1;
 }
 
