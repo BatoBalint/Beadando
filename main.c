@@ -40,16 +40,15 @@ int main(int argc, char *argv[]) {
     for (int i = dataCount; i < linesCount; i++) free(lines[0][i]);
     lines[0] = realloc(lines[0], dataCount * sizeof(char*));
 
-    for (int i = 0; i < dataCount; i++)                             // write to console
+    for (int i = dataCount - 1; i >= 0; i--)                             // write to console
     {
+        if (config.linenums) printf("%d ", i + 1);
         printf("%s\n", lines[0][i]);
     }
 
-
-    for (int i = 0; i < linesCount; i++) free(lines[0][i]);         // free alocated memory
+    for (int i = 0; i < dataCount; i++) free(lines[0][i]);         // free alocated memory
     free(lines[0]);
     free(lines);
-    printf("%ld\n", sizeof(config));
 
     return 0;
 }

@@ -4,7 +4,7 @@
 
 #include "config.h"
 
-int myRead(char ***lines, FILE *reader, conf config, int readPtr, int mallocSize);
+int myRead(char ***lines, FILE *reader, conf config, int mallocSize);
 
 // easier to write error with this
 int mallocError() {
@@ -14,7 +14,7 @@ int mallocError() {
 
 int getInput(char ***lines, int argc, char *argv[], conf config, int mallocSize) {
     FILE *reader;
-    int readPtr = 0;        // memory writing index
+    //int readPtr = 0;        // memory writing index
 
     for (int i = 0; i < mallocSize; i++) {
         lines[0][i] = malloc(config.maxCharCount);
@@ -23,21 +23,24 @@ int getInput(char ***lines, int argc, char *argv[], conf config, int mallocSize)
 
     if (argc == 3) {                    // read from console then exit with allocated memory size
         reader = stdin;
-        return myRead(lines, reader, config, readPtr, mallocSize);
+        return myRead(lines, reader, config, mallocSize);
     }
 
     for (int i = 3; i < argc; i++)      // read from files then exit with allocated memory size
     {
         reader = fopen(argv[i], "r");
-        if (reader == NULL) fprintf(stderr, "Could not open the file: %s", argv[i]);
+        if (reader == NULL) fprintf(stderr, "Could not open the file: %s\n", argv[i]);
         else {
-            mallocSize = myRead(lines, reader, config, readPtr, mallocSize);
+            mallocSize = myRead(lines, reader, config, mallocSize);
         }
     }
     return mallocSize;
 }
 
-int myRead(char ***lines, FILE *reader, conf config, int readPtr, int mallocSize) {
+int myRead(char ***lines, FILE *reader, conf config, int mallocSize) {
+    int readPtr = 0;        // current memory index
+    if (mallocSize != 8) while (lines[0][readPtr][0] != -1) readPtr++;  // when reading from file
+
     char *buffer = malloc(config.maxCharCount);
 
     fgets(buffer, config.maxCharCount, reader);
