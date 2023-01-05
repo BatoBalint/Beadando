@@ -38,42 +38,39 @@ int getInput(char ***lines, int argc, char *argv[], conf config, int mallocSize)
 }
 
 int myRead(char ***lines, FILE *reader, conf config, int mallocSize) {
-    char ch;                // does nothing
-    int readPtr = 0;        // current memory index
-    if (mallocSize != 8) while (lines[0][readPtr][0] != -1) readPtr++;  // when reading from file finds the real end of the array
+    int ch;                // temporary storage
+    int readerIndex = 0;
+    if (mallocSize != 8) while (lines[0][readerIndex][0] != -1) readerIndex++;        // when reading from file finds the last index
 
-    char *buffer = malloc(config.maxCharCount);
-
-    fgets(buffer, config.maxCharCount, reader);
-    if (!strrchr(buffer, '\n')) {                       // clear input buffer if given more charachters than the maxCharCount
-        while ((ch = getchar()) != '\n' && ch != EOF);
-    } else buffer[strlen(buffer) - 1] = '\0';
-
-    while (!feof(reader)) {
-        if (readPtr == mallocSize - 1) {
+    char* buffer = malloc(config.maxCharCount * sizeof(char));
+    if (buffer == NULL) return mallocError();
+    
+    while (fgets(buffer, config.maxCharCount, reader)) {
+        if (readerIndex == mallocSize - 1) {                // memory alloc
             lines[0] = realloc(lines[0], mallocSize * 2 * sizeof(char*));
-            if (lines == NULL) return mallocError();
+            if (lines[0] == NULL) return mallocError();
 
-            for (int i = mallocSize; i < mallocSize * 2; i++) {
-                lines[0][i] = malloc(config.maxCharCount);
+            for (int i = mallocSize; i < mallocSize * 2; i++)
+            {
+                lines[0][i] = malloc(config.maxCharCount * sizeof(char));
                 if (lines[0][i] == NULL) return mallocError();
             }
 
             mallocSize *= 2;
         }
 
-        strcpy(lines[0][readPtr], buffer);          // in this read order, last line ins't duplicated
-        fgets(buffer, config.maxCharCount, reader);
-        if (!strrchr(buffer, '\n')) {                       // same input buffer clearing
-            while ((ch = fgetc(reader)) != '\n' && ch != EOF);
-        }
-        else buffer[strlen(buffer) - 1] = '\0';          // remove line break from fgets result
-        readPtr++;
+        if (!strrchr(buffer, '\n')) while ((ch = fgetc(reader)) != '\n' && ch != EOF);      // clears input buffer if input was more than maxChar
+        else buffer[strlen(buffer) - 1] = 0;
+        if (buffer[strlen(buffer) - 1] == 13) buffer[strlen(buffer) - 1] = 0;               // clears a character which returns to the start of the same line
+        strcpy(lines[0][readerIndex], buffer);
+
+        readerIndex++;
     }
-
-    char end[1] = { (char) -1 };        // lazy way to tell the end of the array anywhere
-    strcpy(lines[0][readPtr], end);
-
+    
+    
+    char end[1] = { (char) -1 };            // lazy way to find last active index anywhere
+    strcpy(lines[0][readerIndex], end); 
+    
     free(buffer);
 
     return mallocSize;
