@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     if (validateArguments(argv)) return 1;
 
     // if correct save values
-    conf config = {(strcmp(argv[1], "linenums") == 0) ? 1 : 0, atoi(argv[2]) + 1};      // + 1 so it can store \0
+    conf config = {(strcmp(argv[1], "linenums") == 0) ? 1 : 0, atoi(argv[2]) + 1};      // + 1 so it can store '\0'
 
     char ***lines = malloc(sizeof(char**));     // 3 levels because it wouldn't let me free otherwise
     if (lines == NULL) {
@@ -31,6 +31,8 @@ int main(int argc, char *argv[]) {
     }
 
     int linesCount = getInput(lines, argc, argv, config, 8);        // read data and store it in lines
+
+    if (linesCount == -1) return 1;                                 // -1 indicates malloc error
 
     int dataCount = 0;                                              // find real end of array
     while(lines[0][dataCount][0] != -1) {

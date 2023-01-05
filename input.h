@@ -1,7 +1,7 @@
 #ifndef INPUT_H
     #define INPUT_H
 
-    #include "input.c"
+    #include "config.h"
 
     int getInput(char ***lines, int argc, char *argv[], conf config, int mallocSize);
 

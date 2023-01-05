@@ -1,5 +1,4 @@
 #include <string.h>
-#include <stdlib.h>
 
 void myReverse(char chars[]) {
     int length = strlen(chars);
